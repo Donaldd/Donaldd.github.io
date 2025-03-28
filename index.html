@@ -6,18 +6,215 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Don's Ultimate Urgency Countdown</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Roboto:wght@400;700;900&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --donckers-bg: #f0f6f8;
+            --donckers-green: #007953;
+            --donckers-yellow: #ffde00;
+            --donckers-dark: #2c3e50;
+            --donckers-text: #333333;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: var(--donckers-bg);
+            color: var(--donckers-text);
+            overflow-x: hidden;
+        }
+
+        .hero-container {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background: var(--donckers-bg);
+        }
+
+        .countdown-container {
+            background: white;
+            border: 3px solid var(--donckers-green);
+            border-radius: 8px;
+            padding: 3rem;
+            box-shadow:
+                0 0 30px rgba(0, 121, 83, 0.1),
+                0 0 60px rgba(255, 222, 0, 0.05);
+            max-width: 800px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .countdown-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--donckers-green), var(--donckers-yellow), var(--donckers-green));
+            animation: shimmer 2s infinite linear;
+        }
+
+        .countdown-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 0%, rgba(0, 121, 83, 0.05) 50%, transparent 100%);
+            animation: shine 3s infinite;
+        }
+
+        .title {
+            font-family: 'Bangers', cursive;
+            font-size: 5rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            color: var(--donckers-green);
+            text-shadow:
+                2px 2px 0 var(--donckers-yellow),
+                4px 4px 0 rgba(0, 0, 0, 0.1);
+            transform: rotate(-1deg);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .subtitle {
+            font-family: 'Bangers', cursive;
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: var(--donckers-text);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+
+        .validation-message {
+            font-family: 'Bangers', cursive;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--donckers-text);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+
+        .countdown-number {
+            font-family: 'Bangers', cursive;
+            font-size: 5rem;
+            text-align: center;
+            color: var(--donckers-yellow);
+            text-shadow:
+                2px 2px 0 var(--donckers-green),
+                4px 4px 0 rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .countdown-number.urgent {
+            color: var(--donckers-green);
+            animation: danger 1s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        @keyframes shine {
+            0% {
+                transform: translateX(-100%) rotate(45deg);
+            }
+
+            100% {
+                transform: translateX(100%) rotate(45deg);
+            }
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: rotate(-1deg) translateY(0);
+            }
+
+            50% {
+                transform: rotate(-1deg) translateY(-10px);
+            }
+        }
+
+        @keyframes danger {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.02);
+            }
+        }
+
+        .time-unit {
+            display: inline-block;
+            margin: 0 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 121, 83, 0.05);
+            border-radius: 4px;
+            border: 2px solid var(--donckers-green);
+            transition: all 0.3s ease;
+            font-weight: 700;
+        }
+
+        .time-unit:hover {
+            background: rgba(0, 121, 83, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 121, 83, 0.1);
+        }
+
+        .time-unit span {
+            font-size: 1.2rem;
+            color: var(--donckers-green);
+            text-shadow: 1px 1px 0 var(--donckers-yellow);
+            opacity: 0.8;
+        }
+    </style>
 </head>
 
-<body class="bg-gray-100 flex flex-col justify-center min-h-screen">
-
-    <div class="text-center">
-        <h1 class="text-4xl font-bold mb-4">Don's Ultimate Urgency Countdown</h1>
-        <h2 class="text-2xl font-semibold mb-8">Let's fucking go, no more excuses!!</h2>
-        <div class="text-6xl font-bold" id="countdown">Loading...</div>
+<body>
+    <div class="hero-container">
+        <div class="countdown-container">
+            <h1 class="title">Don's Ultimate Urgency Countdown</h1>
+            <h2 class="subtitle">Let's fucking go, no more excuses!!</h2>
+            <div class="validation-message">It's time to Validate, Validate, Validate!</div>
+            <div class="countdown-number" id="countdown">Loading...</div>
+        </div>
     </div>
 
     <script>
-        const targetDate = new Date("February 28, 2024 00:00:00").getTime();
+        const targetDate = new Date("April 15, 2025 00:00:00").getTime();
 
         function updateCountdown() {
             const now = new Date().getTime();
@@ -29,16 +226,22 @@
             const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
 
             const countdownElem = document.getElementById("countdown");
-            countdownElem.innerText = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+            countdownElem.innerHTML = `
+                <span class="time-unit">${days}<span>d</span></span>
+                <span class="time-unit">${hours}<span>h</span></span>
+                <span class="time-unit">${minutes}<span>m</span></span>
+                <span class="time-unit">${seconds}<span>s</span></span>
+            `;
 
             if (timeDiff < 0) {
-                countdownElem.classList.add("text-red-600");
+                countdownElem.classList.add("urgent");
             } else {
-                countdownElem.classList.remove("text-red-600");
+                countdownElem.classList.remove("urgent");
             }
         }
 
         setInterval(updateCountdown, 1000);
+        updateCountdown(); // Initial call
     </script>
 </body>
 
